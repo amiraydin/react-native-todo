@@ -1,13 +1,18 @@
 import React from 'react'
-import { View, Text } from 'react-native'
+import { Text, Pressable } from 'react-native';
+import { Card, Icon } from 'react-native-elements';
 
-export default function CardList({ lists }) {
+export default function CardList({ lists, remove }) {
     return (
-        <View>
+        <Card>
+            <Pressable onPress={remove}>
+                <Icon name="close" color="crimson" />
+            </Pressable>
+            <Card.Title>{lists.name}</Card.Title>
+            <Card.Divider />
             <Text>
-                {lists.name}
-                {lists.description}
+                {lists.descrip}
             </Text>
-        </View>
+        </Card>
     )
 }

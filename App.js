@@ -1,29 +1,39 @@
 import React, { useState } from 'react';
-import { Button, StyleSheet, View } from 'react-native';
+import { Button, StyleSheet, Text, TouchableHighlight, View } from 'react-native';
 import CardList from './components/CardList';
-// import ButtonList from './components/ButtonList';
 import ListModal from './components/ListModal';
 
 
 export default function App() {
 
-  const [listModal, setListModal] = useState(false)
+  const [isModalVisible, setIsModalVisible] = useState(false)
   const [lists, setLists] = useState([])
   // const handleReturn = () => {
   //   setListModal(!listModal)
   // }
   console.log(`lists`, lists)
+  function remove(list) {
+    setLists(lists.filter(l => l !== list));
+  }
+
   return (
     <View style={styles.centeredView}>
-      {listModal ? (
-        <>
-          <ListModal addList={setLists} />
-          {/* <Button onPress={handleReturn} title='return' /> */}
-        </>
-      ) : (
-        <Button onPress={() => setListModal(true)} title={'+ Add List'} />)
-      }
-      <CardList lists={lists} />
+      <Button onPress={() => setIsModalVisible(true)} title={'+ Add List'} />
+      {lists?.map((list, index) => (
+        <CardList lists={list} key={index} remove={() => remove(list)} />
+      ))}
+      {isModalVisible && (
+        <ListModal lists={lists}
+          addList={setLists}
+          isVisible={isModalVisible}
+          onClose={() => setIsModalVisible} />
+      )}
+      {lists.length > 0 && (
+        <TouchableHighlight style={styles.button}
+          onPress={() => setLists([])}>
+          <Text style={{ color: "white" }}>clear</Text>
+        </TouchableHighlight>
+      )}
     </View>
   );
 };
@@ -34,45 +44,20 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
-  }, centeredView: {
+  },
+  centeredView: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
     marginTop: 22
   },
-  modalView: {
-    margin: 20,
-    backgroundColor: "white",
-    borderRadius: 20,
-    padding: 35,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5
-  },
+
   button: {
-    borderRadius: 20,
+    backgroundColor: "crimson",
+    borderRadius: 5,
     padding: 10,
-    elevation: 2
-  },
-  buttonOpen: {
-    backgroundColor: "#F194FF",
-  },
-  buttonClose: {
-    backgroundColor: "#2196F3",
-  },
-  textStyle: {
-    color: "white",
-    fontWeight: "bold",
-    textAlign: "center"
-  },
-  modalText: {
-    marginBottom: 15,
-    textAlign: "center"
+    margin: 5,
+    color: "white"
   }
-});
+})
+
